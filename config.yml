@@ -1,0 +1,21 @@
+mybot1:
+    exchange: gemini
+    sym: BTCUSD
+    base_unit: 50
+    base_value: daily_avg
+    buy_delta_percent: 7.5
+    sell_delta_percent: 15
+    trailing_percent: 1
+    mode: auto
+
+mybot2:
+    exchange: gdax
+    sym: BTCUSD
+    dryrun: False
+    unitusd: 100
+    base_value: daily_avg
+    buy_delta_percent: 10
+    sell_delta_percent: 20
+    trailing_percent: 1
+    mode: sell
+    prev_purchase_val: 12800

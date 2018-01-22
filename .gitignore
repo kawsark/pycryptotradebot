@@ -1,0 +1,13 @@
+#backup and compiled files:
+*.pyc
+*~
+
+#SQLite DB files:
+*.db
+
+#Stop files
+*.stop
+
+#Test files
+test.py
+
