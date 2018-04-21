@@ -1,0 +1,2 @@
+tradebot_sqs_name: tradebot-in-queue-YP0MHaB
+sqs_polling_frequency: 10
