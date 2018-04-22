@@ -124,8 +124,8 @@ class Tradebot(object):
                 if self.state == -1: #Stopping if this flag is set
                     break
 
-                if os.path.isfile(self.stopfilename) or os.path.isfile(globalstopfilename): #stop if this file is found
-                    self.tprint("Stopping due to presence of stopfile: %s, or global stopfile: %s" % (self.stopfilename, globalstopfilename))
+                if os.path.isfile(self.stopfilename) or os.path.isfile(self.globalstopfilename): #stop if this file is found
+                    self.tprint("Stopping due to presence of stopfile: %s, or global stopfile: %s" % (self.stopfilename, self.globalstopfilename))
                     break
                 
                 current = self.tickerdb.last(self.sym)
@@ -368,7 +368,7 @@ class Tradebot(object):
         #set initial state        
         self.iterations = 0
         self.stopfilename = self.bot_name+".stop"
-        globalstopfilename = "bot.stop"
+        self.globalstopfilename = "bot.stop"
         self.prevdelta = 0
 
         if self.mode == "auto" or self.mode == "buy":

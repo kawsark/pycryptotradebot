@@ -1,2 +1,2 @@
 tradebot_sqs_name: tradebot-in-queue-YP0MHaB
-sqs_polling_frequency: 10
+sqs_polling_frequency_max_20: 20 

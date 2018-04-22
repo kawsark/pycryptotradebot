@@ -28,8 +28,9 @@ def main(bot_messages):
                 newpid = os.fork()
                 if newpid == 0: #child process
                     bot = tradebot.Tradebot(bot_name,bot_cfg[bot_name],True)
-                    bot.run() 
-                    break
+                    bot.run()
+                    tprint("INFO: Tradebot - child pid %d exitting." % os.getpid())
+                    os._exit(0)
                 
                 else: #parent process
                     tprint("INFO: TradeBotManager - Spawned %s parent pid: %d, child pid: %d\n" % (bot_name, os.getpid(), newpid))
@@ -37,8 +38,8 @@ def main(bot_messages):
             else: #parent process
                 tprint("INFO: TradeBotManager - Skipping bot %s due to no logs directory or no data directory; or log file exists: %s" % (bot_name,logfilepath))
 
-            #Delete message from the queue:
-            message.delete()
+        #Delete message from the queue:
+        message.delete()
 
 
 if __name__ == "__main__":
@@ -51,21 +52,19 @@ if __name__ == "__main__":
        # Get the service resource
        sqs = boto3.resource('sqs')
 
-       tprint("Using queue name %s, and sqs_polling_frequency: %d" %  (cfg['tradebot_sqs_name'],cfg['sqs_polling_frequency']))
+       tprint("Using queue name %s and Long polling frequency: %d" %  (cfg['tradebot_sqs_name'],cfg['sqs_polling_frequency_max_20']))
        
        queue = sqs.get_queue_by_name(QueueName=cfg['tradebot_sqs_name'])
-       polling_frequency = cfg['sqs_polling_frequency']
+       polling_frequency = cfg['sqs_polling_frequency_max_20']
        
        # Process bots:
        tprint("Listening for messages")
        while True:
-           bot_messages = queue.receive_messages(MaxNumberOfMessages=1)
+           bot_messages = queue.receive_messages(MaxNumberOfMessages=10,WaitTimeSeconds=polling_frequency)
            if len(bot_messages) > 0:
                tprint("Processing %d messages: " % len(bot_messages))
                main(bot_messages)
 
-           #Sleep for polling_frequency:
-           time.sleep(polling_frequency)
 
    except Exception as e:
        tprint(str(e))
