@@ -1,2 +1,5 @@
+#Describes a default queue name. Can be overridden by EC2 tag with Key name tradebot_sqs_name
 tradebot_sqs_name: tradebot-in-queue-YP0MHaB
+
+#Enable SQS long polling with maximum of 20 seconds
 sqs_polling_frequency_max_20: 20 
