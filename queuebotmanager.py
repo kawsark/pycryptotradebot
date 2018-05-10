@@ -45,11 +45,25 @@ def main(bot_messages):
 
 
 #If this is an EC2 instance with tradebot_sqs_name tag, they use the value of that tag as queue name
-def get_env_queue_name():
+#Also sets the region for AWS Boto API
+def set_region_and_queue_name():
     sqs_tag_name = "tradebot_sqs_name"
     id_metadata_url = 'http://169.254.169.254/latest/meta-data/instance-id'
+    az_metadata_url = "http://169.254.169.254/latest/meta-data/placement/availability-zone"
+    config_file_path = "/home/ec2-user/.aws/config"
 
     try:
+        #Set the correct region
+        r = requests.get(az_metadata_url,timeout = 10)
+        az = r.text
+        region = az[:len(az)-1]
+
+        file = open(config_file_path, "w")
+        file.write("[default]\n")
+        file.write("region = %s\n" % region)
+        file.close()
+        
+        #Obtain queue name from tag
         r = requests.get(id_metadata_url, timeout=10)
         instance_id = r.text
 
@@ -84,10 +98,9 @@ if __name__ == "__main__":
        tradebot_sqs_name = cfg['tradebot_sqs_name']
 
        #Try to obtain a more specific queue name from Tags
-       temp = get_env_queue_name()
+       temp = set_region_and_queue_name()
        if temp is not None:
            tradebot_sqs_name = temp
-       
        
        # Get the service resource
        sqs = boto3.resource('sqs')
